@@ -7,11 +7,11 @@ const App = () => {
   const [users,setUsers]=useState([])
 
   const [user,setUser]=useState({
-    name:'',age:''
+    Ship_name:'',Capacity:'',Location:'',Cargo:'',Cargo_value:''
   })
 
   const [user2,setUser2]=useState({
-    id:'',name:'',age:''
+    id:'',Ship_name:'',Capacity:'',Location:'',Cargo:'',Cargo_value:''
   })
 
 
@@ -26,7 +26,7 @@ const App = () => {
 
   async function fetchUsers(){
     const {data} = await supabase
-      .from('users')
+      .from('ship_table')
       .select('*')
       setUsers(data)
 
@@ -56,18 +56,18 @@ const App = () => {
 
   async function createUser(){
     await supabase
-    .from('users')
-    .insert({ name: user.name, age: user.age })
+    .from('ship_table')
+    .insert({ Ship_name: user.Ship_name, Capacity: user.Capacity,Location:user.Location,Cargo:user.Cargo,Cargo_value:user.Cargo_value })
 
   fetchUsers()    
-
+ 
 
   }
 
   async function deleteUser(userId){
 
     const { data, error } = await supabase
-      .from('users')
+      .from('ship_table')
       .delete()
       .eq('id', userId)
 
@@ -92,7 +92,7 @@ const App = () => {
     users.map((user)=>{
 
         if(user.id==userId){
-          setUser2({ id:user.id,name:user.name,age:user.age})
+          setUser2({ id:user.id,Ship_name: user.Ship_name, Capacity: user.Capacity,Location:user.Location,Cargo:user.Cargo,Cargo_value:user.Cargo_value})
         }
       
 
@@ -106,8 +106,8 @@ const App = () => {
    async function updateUser(userId){
 
     const { data, error } = await supabase
-      .from('users')
-      .update({ id:user2.id,name:user2.name,age:user2.age})
+      .from('ship_table')
+      .update({ id:user2.id,Ship_name: user2.Ship_name, Capacity: user2.Capacity,Location:user2.Location,Cargo:user2.Cargo,Cargo_value:user2.Cargo_value})
       .eq('id', userId)
 
       await fetchUsers()
@@ -132,15 +132,38 @@ const App = () => {
       <form onSubmit={createUser}>
         <input 
           type="text"
-          placeholder="Name"
-          name='name'
+          placeholder="Ship_Name"
+          name='Ship_name'
           onChange={handleChange}
         
         />
         <input 
+          type="text"
+          placeholder="Capacity"
+          name='Capacity'
+          onChange={handleChange}
+        
+        />
+        <input 
+          type="text"
+          placeholder="Location"
+          name='Location'
+          onChange={handleChange}
+        
+        />
+        
+        <input 
+          type="text"
+          placeholder="Cargo"
+          name='Cargo'
+          onChange={handleChange}
+        
+        />
+        
+        <input 
           type="number"
-          placeholder="Age"
-          name='age'
+          placeholder="Cargo_value"
+          name='Cargo_value'
           onChange={handleChange}
         
         />
@@ -153,21 +176,43 @@ const App = () => {
 
       {/* FORM 2 */}
       <form onSubmit={()=>updateUser(user2.id)}>
+      <input 
+          type="text"
+          name='Ship_name'
+          onChange={handleChange2}
+          defaultValue={user2.Ship_name}
+        
+        />
         <input 
           type="text"
-          name='name'
+          name='Capacity'
           onChange={handleChange2}
-          defaultValue={user2.name}
-        
+          defaultValue={user2.Capacity}
+
         />
         <input 
-          type="number"
-          name='age'
+          type="text"
+          name='Location'
           onChange={handleChange2}
-          defaultValue={user2.age}
+          defaultValue={user2.Location}
 
+        />
+        
+        <input 
+          type="text"
+          name='Cargo'
+          onChange={handleChange2}
+          defaultValue={user2.Cargo}
         
         />
+        
+        <input 
+          type="number"
+          name='Cargo_value'
+          onChange={handleChange2} 
+          defaultValue={user2.Cargo_value}
+        />
+        
         <button type='submit'>Save Changes</button>
 
       </form>
@@ -178,8 +223,11 @@ const App = () => {
         <thead>
           <tr>
             <th>Id</th>
-            <th>Name</th>
-            <th>Age</th>
+            <th>Ship_name</th>
+            <th>Capacity</th>
+            <th>Location</th>
+            <th>Cargo</th>
+            <th>Cargo_value</th>
             <th>Actions</th>
 
           </tr>
@@ -189,8 +237,12 @@ const App = () => {
           {users.map((user)=>
             <tr key={user.id}>
               <td>{user.id}</td>
-              <td>{user.name}</td>
-              <td>{user.age}</td>
+              <td>{user.Ship_name}</td>
+              <td>{user.Capacity}</td>
+              <td>{user.Location}</td>
+              <td>{user.Cargo}</td>
+              <td>{user.Cargo_value}</td>
+              
               <td>
                 <button onClick={()=>{deleteUser(user.id)}}>Delete</button>
                 <button onClick={()=>{displayUser(user.id)}}>Edit</button>
